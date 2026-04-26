@@ -75,6 +75,7 @@ public class GrumMenuScreen extends Screen {
 				items.add(new Toggle("Inventory HUD", () -> cfg.inventoryHud, v -> cfg.inventoryHud = v));
 				break;
 			case "Combat":
+				items.add(new Toggle("Kill Aura", () -> cfg.killAura, v -> cfg.killAura = v));
 				items.add(new Toggle("Hit Sound", () -> cfg.hitSound, v -> cfg.hitSound = v));
 				items.add(new Toggle("Shift Tap", () -> cfg.shiftTap, v -> cfg.shiftTap = v));
 				items.add(new Toggle("Auto Swap (Totem)", () -> cfg.autoSwap, v -> cfg.autoSwap = v));

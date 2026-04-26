@@ -46,6 +46,7 @@ public class GrumClient implements ClientModInitializer {
 			if (cfg.autoNear) AutoNear.tick(client);
 			if (cfg.autoJoin) AutoJoin.tick(client);
 			if (cfg.middleClick) MiddleClick.tick(client);
+			if (cfg.killAura) KillAura.tick(client);
 		});
 
 		HudRenderCallback.EVENT.register((gui, tracker) -> {
