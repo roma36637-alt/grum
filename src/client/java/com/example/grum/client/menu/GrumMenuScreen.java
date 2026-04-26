@@ -51,7 +51,6 @@ public class GrumMenuScreen extends Screen {
 				items.add(new Toggle("Friend Markers", () -> cfg.friendMarkers, v -> cfg.friendMarkers = v));
 				items.add(new Toggle("Kill Effects", () -> cfg.killEffects, v -> cfg.killEffects = v));
 				items.add(new Toggle("TNT Timer", () -> cfg.tntTimer, v -> cfg.tntTimer = v));
-				items.add(new Toggle("Custom Fog", () -> cfg.customFog, v -> cfg.customFog = v));
 				break;
 			case "HUD":
 				items.add(new Toggle("Armor HUD", () -> cfg.armorHud, v -> cfg.armorHud = v));
