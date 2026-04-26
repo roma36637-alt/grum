@@ -48,7 +48,7 @@ public class GrumConfig {
 	public boolean shiftTap = false;
 	public boolean autoSwap = false;
 	public boolean killAura = false;
-	public double killAuraRadius = 3.5;
+	public double killAuraRadius = 3.0;
 	public boolean killAuraAttackPlayers = true;
 	public boolean killAuraAttackMobs = true;
 	public boolean killAuraNotPassive = true;
@@ -57,7 +57,11 @@ public class GrumConfig {
 	public boolean killAuraRequireWeapon = false;
 	public boolean killAuraNotWhileUsingItem = true;
 	public boolean killAuraStopSprint = true;
-	public int killAuraIntervalMs = 100;
+	public int killAuraIntervalMs = 600;
+	public int killAuraJitterMs = 200;
+	public int killAuraSwitchDelayMs = 150;
+	public boolean killAuraRequireLineOfSight = true;
+	public double killAuraMaxAngle = 90.0;
 
 	// === Movement / Auto ===
 	public boolean autoSprint = false;
