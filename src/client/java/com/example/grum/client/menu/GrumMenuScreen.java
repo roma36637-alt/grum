@@ -46,6 +46,7 @@ public class GrumMenuScreen extends Screen {
 			case "Visuals":
 				items.add(new Toggle("See Invisible", () -> cfg.видетьНевидимых, v -> cfg.видетьНевидимых = v));
 				items.add(new Toggle("Custom Hitbox", () -> cfg.customHitbox, v -> cfg.customHitbox = v));
+				items.add(new Toggle("Target ESP", () -> cfg.targetEsp, v -> cfg.targetEsp = v));
 				items.add(new Toggle("Trap ESP", () -> cfg.trapEsp, v -> cfg.trapEsp = v));
 				items.add(new Toggle("Item Highlighter", () -> cfg.itemHighlighter, v -> cfg.itemHighlighter = v));
 				items.add(new Toggle("Friend Markers", () -> cfg.friendMarkers, v -> cfg.friendMarkers = v));

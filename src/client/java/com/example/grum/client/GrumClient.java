@@ -62,6 +62,7 @@ public class GrumClient implements ClientModInitializer {
 			GrumConfig cfg = GrumConfig.get();
 			if (cfg.tntTimer) TntTimer.render(ctx);
 			if (cfg.customHitbox) CustomHitbox.render(ctx);
+			if (cfg.targetEsp) TargetEsp.render(ctx);
 			if (cfg.trapEsp) TrapEsp.render(ctx);
 			if (cfg.friendMarkers) FriendMarkers.render(ctx);
 		});

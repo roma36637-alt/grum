@@ -18,6 +18,7 @@ public class GrumConfig {
 	// === Visuals ===
 	public boolean видетьНевидимых = false;
 	public boolean customHitbox = false;
+	public boolean targetEsp = false;
 	public boolean trapEsp = false;
 	public boolean itemHighlighter = false;
 	public boolean friendMarkers = false;
