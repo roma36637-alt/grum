@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "grum",
+	"version": "${version}",
+	"name": "grum",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"com.example.grum.GrumMod"
+		],
+		"client": [
+			"com.example.grum.client.GrumClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "grum.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": "~1.21.8",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
