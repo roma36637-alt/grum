@@ -40,6 +40,8 @@ public class GrumClient implements ClientModInitializer {
 			if (cfg.deathCoords) DeathCoords.tick(client);
 			if (cfg.totemTracker) TotemTracker.tick(client);
 			if (cfg.itemPickup) ItemPickup.tick(client);
+			if (cfg.autoInvisible) AutoInvisible.tick(client);
+			if (cfg.killEffects) KillEffects.tick(client);
 		});
 
 		HudRenderCallback.EVENT.register((gui, tracker) -> {
@@ -59,6 +61,9 @@ public class GrumClient implements ClientModInitializer {
 		WorldRenderEvents.AFTER_ENTITIES.register(ctx -> {
 			GrumConfig cfg = GrumConfig.get();
 			if (cfg.tntTimer) TntTimer.render(ctx);
+			if (cfg.customHitbox) CustomHitbox.render(ctx);
+			if (cfg.trapEsp) TrapEsp.render(ctx);
+			if (cfg.friendMarkers) FriendMarkers.render(ctx);
 		});
 
 		AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
