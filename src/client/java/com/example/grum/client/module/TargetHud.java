@@ -4,12 +4,15 @@ import com.example.grum.client.GrumConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 
 /** Карточка цели слева снизу: имя + HP-полоска. Показывает того, на кого навёл прицел. */
 public final class TargetHud {
+	private static final ResourceLocation TARGET_ICON = ResourceLocation.fromNamespaceAndPath("grum", "textures/icons/hud/target.png");
 	private static LivingEntity lastTarget;
 	private static long lastSeen;
 
@@ -47,8 +50,11 @@ public final class TargetHud {
 		gui.fill(x, y, x + 1, y + height, 0xFF2A2E3A);
 		gui.fill(x + width - 1, y, x + width, y + height, 0xFF2A2E3A);
 
+		// иконка target
+		gui.blit(RenderPipelines.GUI_TEXTURED, TARGET_ICON, x + padding, y + 6, 0f, 0f, 8, 8, 8, 8);
+
 		// имя
-		gui.drawString(font, name, x + padding, y + 6, 0xFFFFFFFF, false);
+		gui.drawString(font, name, x + padding + 12, y + 6, 0xFFFFFFFF, false);
 
 		// hp bar
 		int barX = x + padding;
