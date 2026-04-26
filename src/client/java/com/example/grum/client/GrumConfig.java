@@ -24,6 +24,9 @@ public class GrumConfig {
 	public boolean friendMarkers = false;
 	public boolean killEffects = false;
 	public boolean tntTimer = false;
+	public boolean prediction = false;
+	public boolean soundEsp = false;
+	public boolean itemRadius = false;
 	public boolean customFog = false;
 	public double customFogDistance = 64.0;
 
@@ -37,6 +40,8 @@ public class GrumConfig {
 	public boolean playerHud = false;
 	public boolean keybindsHud = false;
 	public boolean cooldownsHud = false;
+	public boolean dynamicIsland = false;
+	public boolean inventoryHud = false;
 
 	// === Combat ===
 	public boolean hitSound = false;
@@ -49,6 +54,13 @@ public class GrumConfig {
 	public int autoEatThreshold = 17;
 	public boolean autoAccept = false;
 	public boolean autoInvisible = false;
+	public boolean elytraUtils = false;
+	public boolean autoNear = false;
+	public long autoNearIntervalMs = 30000;
+	public boolean autoJoin = false;
+	public String autoJoinCommand = "";
+	public boolean middleClick = false;
+	public String middleClickAction = "friend";
 
 	// === Utility ===
 	public boolean deathCoords = false;

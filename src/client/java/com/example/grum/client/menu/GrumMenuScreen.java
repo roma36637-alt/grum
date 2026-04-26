@@ -52,6 +52,9 @@ public class GrumMenuScreen extends Screen {
 				items.add(new Toggle("Friend Markers", () -> cfg.friendMarkers, v -> cfg.friendMarkers = v));
 				items.add(new Toggle("Kill Effects", () -> cfg.killEffects, v -> cfg.killEffects = v));
 				items.add(new Toggle("TNT Timer", () -> cfg.tntTimer, v -> cfg.tntTimer = v));
+				items.add(new Toggle("Prediction", () -> cfg.prediction, v -> cfg.prediction = v));
+				items.add(new Toggle("Sound ESP", () -> cfg.soundEsp, v -> cfg.soundEsp = v));
+				items.add(new Toggle("Item Radius", () -> cfg.itemRadius, v -> cfg.itemRadius = v));
 				break;
 			case "HUD":
 				items.add(new Toggle("Armor HUD", () -> cfg.armorHud, v -> cfg.armorHud = v));
@@ -63,6 +66,8 @@ public class GrumMenuScreen extends Screen {
 				items.add(new Toggle("Player Info", () -> cfg.playerHud, v -> cfg.playerHud = v));
 				items.add(new Toggle("Keybinds", () -> cfg.keybindsHud, v -> cfg.keybindsHud = v));
 				items.add(new Toggle("Cooldowns", () -> cfg.cooldownsHud, v -> cfg.cooldownsHud = v));
+				items.add(new Toggle("Dynamic Island", () -> cfg.dynamicIsland, v -> cfg.dynamicIsland = v));
+				items.add(new Toggle("Inventory HUD", () -> cfg.inventoryHud, v -> cfg.inventoryHud = v));
 				break;
 			case "Combat":
 				items.add(new Toggle("Hit Sound", () -> cfg.hitSound, v -> cfg.hitSound = v));
@@ -73,9 +78,13 @@ public class GrumMenuScreen extends Screen {
 				items.add(new Toggle("Auto Sprint", () -> cfg.autoSprint, v -> cfg.autoSprint = v));
 				items.add(new Toggle("Auto Eat", () -> cfg.autoEat, v -> cfg.autoEat = v));
 				items.add(new Toggle("Auto Invisible", () -> cfg.autoInvisible, v -> cfg.autoInvisible = v));
+				items.add(new Toggle("Elytra Utils", () -> cfg.elytraUtils, v -> cfg.elytraUtils = v));
 				break;
 			case "Utility":
 				items.add(new Toggle("Auto Accept TPA", () -> cfg.autoAccept, v -> cfg.autoAccept = v));
+				items.add(new Toggle("Auto Near", () -> cfg.autoNear, v -> cfg.autoNear = v));
+				items.add(new Toggle("Auto Join", () -> cfg.autoJoin, v -> cfg.autoJoin = v));
+				items.add(new Toggle("Middle Click", () -> cfg.middleClick, v -> cfg.middleClick = v));
 				items.add(new Toggle("Death Coords", () -> cfg.deathCoords, v -> cfg.deathCoords = v));
 				items.add(new Toggle("Totem Tracker", () -> cfg.totemTracker, v -> cfg.totemTracker = v));
 				items.add(new Toggle("Item Pickup Notify", () -> cfg.itemPickup, v -> cfg.itemPickup = v));

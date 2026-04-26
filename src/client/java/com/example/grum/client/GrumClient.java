@@ -42,6 +42,10 @@ public class GrumClient implements ClientModInitializer {
 			if (cfg.itemPickup) ItemPickup.tick(client);
 			if (cfg.autoInvisible) AutoInvisible.tick(client);
 			if (cfg.killEffects) KillEffects.tick(client);
+			if (cfg.elytraUtils) ElytraUtils.tick(client);
+			if (cfg.autoNear) AutoNear.tick(client);
+			if (cfg.autoJoin) AutoJoin.tick(client);
+			if (cfg.middleClick) MiddleClick.tick(client);
 		});
 
 		HudRenderCallback.EVENT.register((gui, tracker) -> {
@@ -56,6 +60,8 @@ public class GrumClient implements ClientModInitializer {
 			if (cfg.keybindsHud) KeybindsHud.render(gui);
 			if (cfg.cooldownsHud) CooldownsHud.render(gui);
 			if (cfg.itemHighlighter) ItemHighlighter.render(gui);
+			if (cfg.dynamicIsland) DynamicIsland.render(gui);
+			if (cfg.inventoryHud) InventoryHud.render(gui);
 		});
 
 		WorldRenderEvents.AFTER_ENTITIES.register(ctx -> {
@@ -65,6 +71,9 @@ public class GrumClient implements ClientModInitializer {
 			if (cfg.targetEsp) TargetEsp.render(ctx);
 			if (cfg.trapEsp) TrapEsp.render(ctx);
 			if (cfg.friendMarkers) FriendMarkers.render(ctx);
+			if (cfg.prediction) Prediction.render(ctx);
+			if (cfg.soundEsp) SoundEsp.render(ctx);
+			if (cfg.itemRadius) ItemRadius.render(ctx);
 		});
 
 		AttackEntityCallback.EVENT.register((player, world, hand, entity, hit) -> {
