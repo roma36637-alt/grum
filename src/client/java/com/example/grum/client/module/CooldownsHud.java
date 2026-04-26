@@ -12,6 +12,7 @@ import java.util.List;
 
 /** Показывает иконки + проценты предметов с активным кулдауном (жемчуг, хорус и т.п.). */
 public final class CooldownsHud {
+	public static final String ID = "cooldowns_hud";
 	private static final ItemStack[] TRACKED = {
 			new ItemStack(Items.ENDER_PEARL),
 			new ItemStack(Items.CHORUS_FRUIT),
@@ -41,8 +42,9 @@ public final class CooldownsHud {
 		int slot = 18;
 		int spacing = 2;
 		int total = active.size() * slot + (active.size() - 1) * spacing;
-		int x = gui.guiWidth() / 2 - total / 2;
-		int y = 6;
+		int[] pos = com.example.grum.client.menu.HudRegistry.get(ID, gui.guiWidth() / 2 - total / 2, 30);
+		int x = pos[0], y = pos[1];
+		int startX = x;
 
 		for (int i = 0; i < active.size(); i++) {
 			ItemStack s = active.get(i);
@@ -52,5 +54,6 @@ public final class CooldownsHud {
 			gui.drawString(mc.font, text, x + slot / 2 - mc.font.width(text) / 2, y + slot + 2, 0xFFFFFFFF, true);
 			x += slot + spacing;
 		}
+		com.example.grum.client.menu.HudRegistry.recordBounds(ID, startX, y, total, slot + 12);
 	}
 }

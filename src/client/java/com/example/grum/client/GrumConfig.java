@@ -70,6 +70,9 @@ public class GrumConfig {
 	// === Friends list (никнеймы) ===
 	public java.util.List<String> friends = new java.util.ArrayList<>();
 
+	// === HUD positions (id -> [x, y]) ===
+	public java.util.Map<String, int[]> hudPositions = new java.util.HashMap<>();
+
 	private static GrumConfig INSTANCE;
 
 	public static GrumConfig get() {
@@ -85,6 +88,7 @@ public class GrumConfig {
 				GrumConfig cfg = GSON.fromJson(json, GrumConfig.class);
 				if (cfg == null) cfg = new GrumConfig();
 				if (cfg.friends == null) cfg.friends = new java.util.ArrayList<>();
+				if (cfg.hudPositions == null) cfg.hudPositions = new java.util.HashMap<>();
 				return cfg;
 			}
 		} catch (Exception e) {

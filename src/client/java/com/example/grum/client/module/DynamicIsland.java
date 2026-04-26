@@ -12,6 +12,7 @@ import java.util.Deque;
 
 /** Плашка-уведомление в верхней части экрана (стиль iPhone Dynamic Island). */
 public final class DynamicIsland {
+	public static final String ID = "dynamic_island";
 	private static final ResourceLocation LOGO = ResourceLocation.fromNamespaceAndPath("grum", "icon.png");
 	private static final long DURATION_MS = 3500;
 	private static final Deque<Notification> queue = new ArrayDeque<>();
@@ -42,8 +43,8 @@ public final class DynamicIsland {
 		int iconSize = 14;
 		int w = font.width(text) + padding * 2 + iconSize + 6;
 		int h = 22;
-		int x = gui.guiWidth() / 2 - w / 2;
-		int y = 6;
+		int[] pos = com.example.grum.client.menu.HudRegistry.get(ID, gui.guiWidth() / 2 - w / 2, 6);
+		int x = pos[0], y = pos[1];
 
 		// тёмная плашка с скруглением имитируем доп. рамкой
 		gui.fill(x + 1, y, x + w - 1, y + h, 0xE8101015);
@@ -53,6 +54,7 @@ public final class DynamicIsland {
 		gui.blit(RenderPipelines.GUI_TEXTURED, LOGO, x + padding, y + (h - iconSize) / 2, 0f, 0f,
 				iconSize, iconSize, iconSize, iconSize);
 		gui.drawString(font, text, x + padding + iconSize + 6, y + 7, 0xFFFFFFFF, false);
+		com.example.grum.client.menu.HudRegistry.recordBounds(ID, x, y, w, h);
 	}
 
 	private static class Notification {

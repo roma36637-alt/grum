@@ -1,10 +1,13 @@
 package com.example.grum.client.module;
 
+import com.example.grum.client.menu.HudRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 
 public final class WorldHud {
+	public static final String ID = "world_info";
+
 	private WorldHud() {}
 
 	public static void render(GuiGraphics gui) {
@@ -25,8 +28,9 @@ public final class WorldHud {
 		int boxW = w + padding * 2;
 		int lineH = 10;
 		int boxH = lines.length * lineH + padding * 2;
-		int x = gui.guiWidth() - boxW - 6;
-		int y = 6;
+
+		int[] pos = HudRegistry.get(ID, gui.guiWidth() - boxW - 6, 6);
+		int x = pos[0], y = pos[1];
 
 		gui.fill(x, y, x + boxW, y + boxH, 0xCC151821);
 		gui.fill(x, y, x + boxW, y + 1, 0xFF2A2E3A);
@@ -34,5 +38,6 @@ public final class WorldHud {
 		for (int i = 0; i < lines.length; i++) {
 			gui.drawString(mc.font, lines[i], x + padding, y + padding + i * lineH, 0xFFE0E0E0, false);
 		}
+		HudRegistry.recordBounds(ID, x, y, boxW, boxH);
 	}
 }

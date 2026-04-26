@@ -28,6 +28,11 @@ public class GrumMenuScreen extends Screen {
 		int x0 = (this.width - panelW) / 2;
 		int y0 = (this.height - panelH) / 2;
 
+		// кнопка редактора HUD
+		addRenderableWidget(Button.builder(Component.literal("Edit HUD"), b -> {
+			if (this.minecraft != null) this.minecraft.setScreen(new HudEditorScreen());
+		}).bounds(x0 + panelW - 100, y0 + 12, 90, 22).build());
+
 		String[] tabs = { "Visuals", "HUD", "Combat", "Movement", "Utility" };
 		int tabW = 90, tabH = 22;
 		int tabsTotal = tabs.length * tabW;

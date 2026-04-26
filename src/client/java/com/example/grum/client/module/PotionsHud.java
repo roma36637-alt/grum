@@ -1,17 +1,18 @@
 package com.example.grum.client.module;
 
+import com.example.grum.client.menu.HudRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 
 import java.util.Collection;
 
-/** Список активных эффектов в правом верхнем углу. */
 public final class PotionsHud {
+	public static final String ID = "potions_hud";
+
 	private PotionsHud() {}
 
 	public static void render(GuiGraphics gui) {
@@ -24,8 +25,11 @@ public final class PotionsHud {
 		Font font = mc.font;
 		int rowH = 22;
 		int width = 120;
-		int x = gui.guiWidth() - width - 8;
-		int y = 8;
+		int totalH = effects.size() * (rowH + 2);
+
+		int[] pos = HudRegistry.get(ID, gui.guiWidth() - width - 8, 8 + 50);
+		int x = pos[0], y = pos[1];
+		int startY = y;
 
 		for (MobEffectInstance inst : effects) {
 			MobEffect effect = inst.getEffect().value();
@@ -33,18 +37,17 @@ public final class PotionsHud {
 			if (inst.getAmplifier() > 0) name += " " + roman(inst.getAmplifier() + 1);
 			String time = MobEffectUtil.formatDuration(inst, 1.0f, mc.level == null ? 20 : mc.level.tickRateManager().tickrate()).getString();
 
-			// фон
 			gui.fill(x, y, x + width, y + rowH, 0xCC151821);
 			gui.fill(x, y, x + width, y + 1, 0xFF2A2E3A);
 			gui.fill(x, y + rowH - 1, x + width, y + rowH, 0xFF2A2E3A);
 
-			// текст
 			int textColor = effect.getColor() | 0xFF000000;
 			gui.drawString(font, name, x + 6, y + 3, textColor, false);
 			gui.drawString(font, time, x + 6, y + 12, 0xFFB0B0B0, false);
 
 			y += rowH + 2;
 		}
+		HudRegistry.recordBounds(ID, x, startY, width, totalH);
 	}
 
 	private static String roman(int n) {

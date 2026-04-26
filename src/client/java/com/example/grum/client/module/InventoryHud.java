@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 
 /** Мини-предпросмотр инвентаря (3 ряда по 9) в правом нижнем углу. */
 public final class InventoryHud {
+	public static final String ID = "inventory_hud";
 	private InventoryHud() {}
 
 	public static void render(GuiGraphics gui) {
@@ -20,8 +21,8 @@ public final class InventoryHud {
 		int padding = 4;
 		int boxW = gridW + padding * 2;
 		int boxH = gridH + padding * 2;
-		int x = gui.guiWidth() - boxW - 6;
-		int y = gui.guiHeight() - boxH - 60;
+		int[] pos = com.example.grum.client.menu.HudRegistry.get(ID, gui.guiWidth() - boxW - 6, gui.guiHeight() - boxH - 60);
+		int x = pos[0], y = pos[1];
 
 		gui.fill(x, y, x + boxW, y + boxH, 0xCC151821);
 		gui.fill(x, y, x + boxW, y + 1, 0xFF2A2E3A);
@@ -39,5 +40,6 @@ public final class InventoryHud {
 				gui.renderItemDecorations(mc.font, s, sx, sy);
 			}
 		}
+		com.example.grum.client.menu.HudRegistry.recordBounds(ID, x, y, boxW, boxH);
 	}
 }
