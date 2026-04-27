@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "triggerbot",
+	"version": "${version}",
+	"name": "TriggerBot",
+	"description": "Клиентский TriggerBot для одиночной игры в Minecraft 1.21.4: мгновенная автоатака при наведении на моба, настройка задержки, дальности, фильтров цели и критов.",
+	"authors": ["Roma"],
+	"contact": {
+		"sources": "https://github.com/"
+	},
+	"license": "MIT",
+	"icon": "assets/triggerbot/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": ["com.triggerbot.TriggerBotMod"],
+		"client": ["com.triggerbot.client.TriggerBotClient"]
+	},
+	"mixins": [
+		"triggerbot.mixins.json",
+		{
+			"config": "triggerbot.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
