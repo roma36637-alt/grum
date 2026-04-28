@@ -1,43 +1,51 @@
-# TriggerBot — Fabric 1.21.4
+# stb — stealth trigger bot
 
-Клиентский мод Fabric, который автоматически атакует существо, на которое вы смотрите.
-Предназначен **только для одиночной игры** (мод помечен `environment: client`, но на серверах с анти-читом он будет легко заметен — не используйте в онлайне).
+Scoped client-only Fabric mod for Minecraft 1.21.8 (singleplayer). No visible
+traces in Minecraft's UI.
 
-## Возможности
+## Features
 
-- Мгновенная автоатака при наведении прицела на моба
-- Ждёт полной перезарядки атаки — каждый удар с максимальным уроном
-- Режим «только криты»: бьёт только в прыжке/падении
-- Фильтры целей: враждебные / мирные / игроки / любые
-- Настраиваемая дальность (2–6 блоков) и расширение хитбокса
-- Настраиваемая задержка и случайный джиттер для естественного тайминга
-- Игнорирование стоек для брони, рамок и дисплей-энтити
-- Опция «только с оружием в руке» (меч / топор / трезубец / булава / лук / арбалет)
-- HUD-индикатор включения
-- Экранное меню настроек
+- Mixin-based key handling — no entries in the vanilla `Options → Controls` menu
+- No HUD, no chat messages, no logger calls, no toast notifications
+- Config file stored as `.minecraft/config/.opts.dat` (dotfile, hidden by
+  default on most OSes; unusual extension so it blends in)
+- Wait-cooldown, crit-only, weapon-only, line-of-sight, FOV filter
+- Random interval jitter, switch-target delay, occasional skipped attacks to
+  humanise timing
+- Target filters: hostile / passive / players / utility (armor stands & item
+  frames ignored by default)
+- ProGuard obfuscation on the built jar — internal classes renamed to single
+  letters at the root package, source file names stripped
 
-## Горячие клавиши
+## Hotkeys
 
-- `V` — включить/выключить TriggerBot
-- `Right Shift` — открыть меню настроек
+| Combo | Action |
+|---|---|
+| `Right Shift` | Toggle enabled / disabled |
+| `Right Shift` + `Right Ctrl` | Open hidden config screen |
 
-(переопределяются в стандартном меню **Настройки → Управление**)
+None of these are registered as `KeyMapping`s — they are intercepted in a
+Mixin to `KeyboardHandler`, so they cannot be rebound or spotted in the
+controls menu.
 
-## Сборка
+## Build
 
 ```bash
 ./gradlew build
 ```
 
-Готовый jar появится в `build/libs/triggerbot-1.0.0.jar`. Киньте его в `.minecraft/mods` рядом с Fabric API.
+Produces `build/libs/stb-1.0.0.jar` (obfuscated with ProGuard).
 
-## Зависимости
+Drop the jar into `.minecraft/mods` together with Fabric API
+(≥ 0.136.1+1.21.8). Works with Fabric Loader ≥ 0.19.2 on Minecraft 1.21.8.
 
-- Minecraft 1.21.4
-- Fabric Loader ≥ 0.16.0
-- Fabric API (любой билд под 1.21.4)
-- Java 21
+## Security notes
 
-## Конфиг
+The ProGuard step renames all internal classes/methods/fields, strips line
+numbers and source file names, and repackages everything at the root. Only
+the Fabric entrypoint classes and the Mixin class keep their original names
+(they are referenced by string in `fabric.mod.json` / `stb.client.mixins.json`
+and cannot be renamed without updating those files). Decompiling the jar
+will produce a pile of single-letter helpers that are difficult to follow.
 
-Настройки сохраняются в `.minecraft/config/triggerbot.json` и синхронизируются с экраном настроек.
+This is a client-side helper intended for offline / singleplayer use.

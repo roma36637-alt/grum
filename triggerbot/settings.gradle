@@ -9,4 +9,4 @@ pluginManagement {
 	}
 }
 
-rootProject.name = 'triggerbot'
+rootProject.name = 'stb'
