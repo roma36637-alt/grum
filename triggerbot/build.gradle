@@ -1,24 +1,27 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.guardsquare:proguard-gradle:7.7.0'
+	}
+}
+
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
 	id 'maven-publish'
 }
 
+import proguard.gradle.ProGuardTask
+
 version = project.mod_version
 group = project.maven_group
-
-base {
-	archivesName = project.archives_base_name
-}
-
-repositories {
-	// Add repositories to retrieve artifacts from in here.
-}
 
 loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"triggerbot" {
+		"stb" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
@@ -27,7 +30,7 @@ loom {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
@@ -46,14 +49,15 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
 	withSourcesJar()
-
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
+	inputs.property "projectName", project.name
+
 	from("LICENSE") {
-		rename { "${it}_${project.archives_base_name}" }
+		rename { "${it}_${project.name}" }
 	}
 }
 
@@ -66,3 +70,35 @@ publishing {
 	repositories {
 	}
 }
+
+// ProGuard obfuscation of the final remapped jar. Runs after remapJar, which
+// Fabric Loom places in build/libs/<name>-<version>.jar. We write the obfuscated
+// copy over the same path so downstream consumers pick it up automatically.
+tasks.register('obfuscateJar', ProGuardTask) {
+	dependsOn remapJar
+	def inJar = tasks.remapJar.archiveFile.get().asFile
+	def outJar = new File(inJar.parentFile, inJar.name.replace('.jar', '-obf.jar'))
+	injars inJar
+	outjars outJar
+	configuration 'proguard.pro'
+
+	// Minecraft / Java libs on the classpath so ProGuard can resolve references.
+	libraryjars "${System.getProperty('java.home')}/jmods/java.base.jmod"
+	libraryjars "${System.getProperty('java.home')}/jmods/java.desktop.jmod"
+	libraryjars "${System.getProperty('java.home')}/jmods/java.logging.jmod"
+	doFirst {
+		def seen = new HashSet<String>()
+		configurations.runtimeClasspath.each {
+			if (seen.add(it.absolutePath)) libraryjars it
+		}
+	}
+
+	doLast {
+		// Replace the main jar with the obfuscated one so users only ever see the
+		// obfuscated artifact in build/libs/.
+		ant.move(file: outJar, tofile: inJar, overwrite: true)
+	}
+}
+
+build.dependsOn obfuscateJar
+

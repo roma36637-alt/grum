@@ -1,8 +1,10 @@
 {
 	"required": true,
-	"package": "com.triggerbot.mixin",
+	"package": "com.stb.client.mixin",
 	"compatibilityLevel": "JAVA_21",
-	"mixins": [],
+	"client": [
+		"KeyboardMixin"
+	],
 	"injectors": {
 		"defaultRequire": 1
 	}
