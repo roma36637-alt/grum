@@ -9,10 +9,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.decoration.ItemFrame;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -138,8 +136,9 @@ public final class StbLogic {
 		if (p.onClimbable()) return true;
 
 		boolean onGround = p.onGround();
-		// Jump key held + space-only style check: about to leave ground
-		if (!mc.options.keyJump.isDown() && onGround) return true;
+		// Jump key held AND on ground: player is about to leave the ground
+		// → allow attack so the swing connects during the jump window.
+		if (mc.options.keyJump.isDown() && onGround) return true;
 
 		// Standard airborne crit: not on ground and fallDistance > 0
 		if (!onGround && p.fallDistance > 0.0f) return true;
@@ -210,12 +209,12 @@ public final class StbLogic {
 		if (!e.isAlive() || e.isRemoved()) return false;
 		if (e.isInvulnerable()) return false;
 		if (!(e instanceof LivingEntity)) return false;
-		if (e instanceof ItemEntity) return false;
-		if (c.ignoreUtility && (e instanceof ArmorStand || e instanceof ItemFrame)) return false;
+		if (c.ignoreUtility && e instanceof ArmorStand) return false;
 
 		if (e instanceof Player) return c.targetPlayers;
 		if (e instanceof Enemy) return c.targetHostile;
-		if (e instanceof Animal) return c.targetPassive;
+		// AgeableMob covers both animals and villagers/wandering traders
+		if (e instanceof AgeableMob) return c.targetPassive;
 		return c.targetHostile; // fallback for generic monsters/slimes
 	}
 }
