@@ -31,7 +31,7 @@ public final class StbConfig {
 	public boolean waitCooldown = true;
 	/** only hit while mid-air/falling (crit) */
 	public boolean critOnly = false;
-	/** require sword/axe in main hand */
+	/** require sword/axe/mace/trident in main hand */
 	public boolean requireWeapon = false;
 	/** require line of sight to target */
 	public boolean requireLos = true;
@@ -39,6 +39,8 @@ public final class StbConfig {
 	public double maxAngle = 60.0;
 	/** optional: don't attack while using an item (blocking, eating) */
 	public boolean notWhileUsingItem = true;
+	/** only attack while jump (Space) is held — useful for manual crit timing */
+	public boolean spaceOnly = false;
 
 	/** Target filters. */
 	public boolean targetHostile = true;
@@ -48,6 +50,10 @@ public final class StbConfig {
 
 	/** random skip rate 0..1 — occasionally skip an attack to humanize */
 	public double randomSkip = 0.07;
+
+	/** Once toggled true at runtime via panic key, the bot is fully unhooked
+	 * for the remainder of the session. Persisted so future sessions stay off. */
+	public transient boolean unhooked = false;
 
 	public static StbConfig get() {
 		if (INSTANCE == null) INSTANCE = load();

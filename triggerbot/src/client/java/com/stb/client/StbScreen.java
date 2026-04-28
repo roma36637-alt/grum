@@ -41,6 +41,8 @@ public class StbScreen extends Screen {
 				.create(left, y + rh * 5, w, 20, Component.literal("not using item"), (b, v) -> c.notWhileUsingItem = v));
 		addRenderableWidget(CycleButton.onOffBuilder(c.ignoreUtility)
 				.create(left, y + rh * 6, w, 20, Component.literal("ignore utility"), (b, v) -> c.ignoreUtility = v));
+		addRenderableWidget(CycleButton.onOffBuilder(c.spaceOnly)
+				.create(left, y + rh * 8, w, 20, Component.literal("space-only mode"), (b, v) -> c.spaceOnly = v));
 
 		addRenderableWidget(CycleButton.onOffBuilder(c.targetHostile)
 				.create(right, y, w, 20, Component.literal("hostile"), (b, v) -> c.targetHostile = v));

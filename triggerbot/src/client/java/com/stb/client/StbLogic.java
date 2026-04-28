@@ -1,12 +1,14 @@
 package com.stb.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -34,6 +37,18 @@ public final class StbLogic {
 
 	public static void tick(Minecraft mc) {
 		StbConfig c = StbConfig.get();
+
+		// --- Panic key: HOME unloads bot for the rest of the session ---
+		if (!c.unhooked) {
+			long wh = mc.getWindow().getWindow();
+			if (InputConstants.isKeyDown(wh, InputConstants.KEY_HOME)) {
+				c.unhooked = true;
+				c.enabled = false;
+				return;
+			}
+		}
+		if (c.unhooked) return;
+
 		if (!c.enabled) return;
 		LocalPlayer p = mc.player;
 		if (p == null || mc.level == null || mc.gameMode == null) return;
@@ -42,22 +57,24 @@ public final class StbLogic {
 
 		if (c.notWhileUsingItem && p.isUsingItem()) return;
 
-		if (c.requireWeapon) {
-			ItemStack s = p.getMainHandItem();
-			if (s.isEmpty() || (!s.is(ItemTags.SWORDS) && !s.is(ItemTags.AXES) && !s.is(ItemTags.TRIDENT_ENCHANTABLE))) return;
+		// spaceOnly: only attack while Space is held (manual crit timing)
+		if (c.spaceOnly) {
+			long wh = mc.getWindow().getWindow();
+			if (!InputConstants.isKeyDown(wh, InputConstants.KEY_SPACE)) return;
 		}
 
-		if (c.waitCooldown && p.getAttackStrengthScale(0.0f) < 1.0f) return;
+		// Weapon check via DataComponents — works with modded weapons too.
+		if (c.requireWeapon && !hasAttackDamage(p.getMainHandItem())) return;
 
-		if (c.critOnly) {
-			boolean canCrit = p.fallDistance > 0.0f
-					&& !p.onGround()
-					&& !p.onClimbable()
-					&& !p.isInWater()
-					&& !p.hasEffect(MobEffects.BLINDNESS)
-					&& !p.isPassenger();
-			if (!canCrit) return;
+		// Smart cooldown: use 0.9 threshold when airborne (tighter timing),
+		// 1.0 when on ground (guaranteed max damage).
+		if (c.waitCooldown) {
+			float threshold = p.onGround() ? 1.0f : 0.9f;
+			if (p.getAttackStrengthScale(0.5f) < threshold) return;
 		}
+
+		// Smart crit check — mirrors the logic from analyzed mods.
+		if (c.critOnly && !canCrit(mc, p)) return;
 
 		long now = System.currentTimeMillis();
 		if (now < nextAllowed) return;
@@ -91,6 +108,43 @@ public final class StbLogic {
 
 		int jitter = c.jitterMs > 0 ? R.nextInt(c.jitterMs + 1) : 0;
 		nextAllowed = now + Math.max(0, c.intervalMs) + jitter;
+	}
+
+	/** Checks for ATTACK_DAMAGE attribute via DataComponents — universal weapon detection. */
+	private static boolean hasAttackDamage(ItemStack stack) {
+		if (stack.isEmpty()) return false;
+		ItemAttributeModifiers mods = stack.get(DataComponents.ATTRIBUTE_MODIFIERS);
+		if (mods == null) return false;
+		return mods.modifiers().stream()
+				.anyMatch(e -> e.attribute().equals(Attributes.ATTACK_DAMAGE));
+	}
+
+	/**
+	 * Smart crit logic ported from analyzed mods:
+	 * - Can crit if on a ladder (block material check)
+	 * - Can crit if Jump is held AND on ground (about to jump)
+	 * - Can crit if fallDistance > 0 AND not on ground (standard falling crit)
+	 * - Cannot crit with Blindness or Levitation active
+	 */
+	private static boolean canCrit(Minecraft mc, LocalPlayer p) {
+		// Check disabling effects
+		boolean jumping = p.input.keyPresses.jump();
+		if (!jumping) {
+			if (p.hasEffect(MobEffects.BLINDNESS)) return false;
+			if (p.hasEffect(MobEffects.LEVITATION)) return false;
+		}
+
+		// On a climbable block → allow (crit logic works on ladders/vines)
+		if (p.onClimbable()) return true;
+
+		boolean onGround = p.onGround();
+		// Jump key held + space-only style check: about to leave ground
+		if (!mc.options.keyJump.isDown() && onGround) return true;
+
+		// Standard airborne crit: not on ground and fallDistance > 0
+		if (!onGround && p.fallDistance > 0.0f) return true;
+
+		return false;
 	}
 
 	private static Entity pick(Minecraft mc, StbConfig c, LocalPlayer p) {
