@@ -23,6 +23,9 @@ public abstract class KeyboardMixin {
 		if (action != GLFW.GLFW_PRESS) return;
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null) return;
+		// Don't fire while any screen is open — prevents toggling during inventory/chat
+		// and preserves the parent screen on the config screen.
+		if (mc.screen != null) return;
 
 		if (key == GLFW.GLFW_KEY_RIGHT_SHIFT) {
 			boolean ctrl = (modifiers & GLFW.GLFW_MOD_CONTROL) != 0;
