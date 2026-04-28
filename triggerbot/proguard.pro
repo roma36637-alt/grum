@@ -6,8 +6,9 @@
 -dontnote **
 -verbose
 
-# Preserve line numbers as "0" so stack traces leak nothing.
--keepattributes SourceFile,LineNumberTable
+# Preserve annotations (Mixin framework reads them at runtime) and strip
+# source file / line number info so stack traces leak nothing.
+-keepattributes *Annotation*
 -renamesourcefileattribute ""
 
 # Aggressive optimisation / obfuscation.
@@ -50,8 +51,7 @@
 -keep class org.spongepowered.** { *; }
 -keep class com.mojang.** { *; }
 
-# Strip unused annotations for extra noise.
--keepattributes !RuntimeInvisibleAnnotations,!RuntimeInvisibleParameterAnnotations
+# Keep all runtime annotations — Mixin, Inject, etc. are looked up reflectively.
 
 # Use unusual characters (Chinese-ideographs & zero-widths would confuse
 # decompilers but break the JVM class format); stick with all-lowercase
